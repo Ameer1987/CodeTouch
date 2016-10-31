@@ -17,7 +17,7 @@ class User implements AdvancedUserInterface, \Serializable {
     /**
      * @var string
      */
-    private $userName;
+    private $username;
 
     /**
      * @var string
@@ -52,25 +52,25 @@ class User implements AdvancedUserInterface, \Serializable {
     }
 
     /**
-     * Set userName
+     * Set username
      *
-     * @param string $userName
+     * @param string $username
      *
      * @return User
      */
-    public function setUserName($userName) {
-        $this->userName = $userName;
+    public function setUsername($username) {
+        $this->username = $username;
 
         return $this;
     }
 
     /**
-     * Get userName
+     * Get username
      *
      * @return string
      */
-    public function getUserName() {
-        return $this->userName;
+    public function getUsername() {
+        return $this->username;
     }
 
     /**
@@ -103,11 +103,6 @@ class User implements AdvancedUserInterface, \Serializable {
     public function getId() {
         return $this->id;
     }
-
-    /**
-     * @var string
-     */
-    private $username;
 
     /**
      * @var boolean
