@@ -6,22 +6,31 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use AppBundle\Entity\Message;
 use AppBundle\Form\MessageType;
 
 class BackendController extends Controller {
 
     /**
-     * @Route("/", name="get_all_users", methods="GET")
+     * @Route("api/v1/getAllUsers/", name="get_all_users", methods="GET")
      */
     public function getAllUsersAction() {
         try {
             $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
             $query = $em->createQueryBuilder('u')
                     ->getQuery();
-            $users = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+            $users = $query->getResult();
 
-            return new Response(json_encode($users), 201, array(
+            $encoders = array(new XmlEncoder(), new JsonEncoder());
+            $normalizers = array(new ObjectNormalizer());
+            $serializer = new Serializer($normalizers, $encoders);
+            $usersJson = $serializer->serialize($users, 'json');
+
+            return new Response($usersJson, 201, array(
                 'content-type' => 'application/json'
             ));
         } catch (Exception $exception) {
@@ -71,9 +80,14 @@ class BackendController extends Controller {
                     ->orderBy('m.sendDate', 'DESC')
                     ->getQuery();
 
-            $messages = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+            $messages = $query->getResult();
 
-            return new Response(json_encode($messages), 201, array(
+            $encoders = array(new XmlEncoder(), new JsonEncoder());
+            $normalizers = array(new ObjectNormalizer());
+            $serializer = new Serializer($normalizers, $encoders);
+            $messagesJson = $serializer->serialize($messages, 'json');
+
+            return new Response($messagesJson, 201, array(
                 'content-type' => 'application/json'
             ));
         } catch (Exception $exception) {
