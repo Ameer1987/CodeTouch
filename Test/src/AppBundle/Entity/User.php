@@ -25,11 +25,6 @@ class User implements AdvancedUserInterface, \Serializable {
     private $password;
 
     /**
-     * @var boolean
-     */
-    private $isOnline;
-
-    /**
      * @var integer
      */
     private $id;
@@ -98,28 +93,6 @@ class User implements AdvancedUserInterface, \Serializable {
      */
     public function getPassword() {
         return $this->password;
-    }
-
-    /**
-     * Set isOnline
-     *
-     * @param boolean $isOnline
-     *
-     * @return User
-     */
-    public function setIsOnline($isOnline) {
-        $this->isOnline = $isOnline;
-
-        return $this;
-    }
-
-    /**
-     * Get isOnline
-     *
-     * @return boolean
-     */
-    public function getIsOnline() {
-        return $this->isOnline;
     }
 
     /**
@@ -215,6 +188,43 @@ class User implements AdvancedUserInterface, \Serializable {
                 // see section on salt below
                 // $this->salt
                 ) = unserialize($serialized);
+    }
+
+    /**
+     * @var \DateTime
+     */
+    private $lastActivityAt;
+
+    /**
+     * Set lastActivityAt
+     *
+     * @param \DateTime $lastActivityAt
+     *
+     * @return User
+     */
+    public function setLastActivityAt($lastActivityAt) {
+        $this->lastActivityAt = $lastActivityAt;
+
+        return $this;
+    }
+
+    /**
+     * Get lastActivityAt
+     *
+     * @return \DateTime
+     */
+    public function getLastActivityAt() {
+        return $this->lastActivityAt;
+    }
+
+    /**
+     * @return Bool Whether the user is active or not
+     */
+    public function isActiveNow() {
+        // Delay during wich the user will be considered as still active
+        $delay = new \DateTime('2 minutes ago');
+
+        return ( $this->getLastActivityAt() > $delay );
     }
 
 }
