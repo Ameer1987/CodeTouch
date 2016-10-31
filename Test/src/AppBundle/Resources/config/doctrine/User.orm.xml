@@ -9,7 +9,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="userName" type="string" column="user_name" length="255" nullable="false">
+    <field name="username" type="string" column="username" length="255" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
@@ -17,6 +17,11 @@
     <field name="password" type="string" column="password" length="255" nullable="false">
       <options>
         <option name="fixed"/>
+      </options>
+    </field>
+    <field name="isActive" type="boolean" column="is_active" nullable="false">
+      <options>
+        <option name="default">1</option>
       </options>
     </field>
     <field name="isOnline" type="boolean" column="is_online" nullable="false"/>

@@ -138,38 +138,5 @@ class User
     {
         return $this->id;
     }
-    /**
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @var boolean
-     */
-    private $isActive = '1';
-
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     *
-     * @return User
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
 }
+
