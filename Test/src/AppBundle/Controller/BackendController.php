@@ -21,7 +21,9 @@ class BackendController extends Controller {
     public function getAllUsersAction() {
         try {
             $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
+            $user_id = $this->getUser()->getId();
             $query = $em->createQueryBuilder('u')
+                    ->where("u.id != $user_id")
                     ->getQuery();
             $users = $query->getResult();
 
@@ -30,7 +32,7 @@ class BackendController extends Controller {
             $serializer = new Serializer($normalizers, $encoders);
             $usersJson = $serializer->serialize($users, 'json');
 
-            return new Response($usersJson, 201, array(
+            return new Response($usersJson, 200, array(
                 'content-type' => 'application/json'
             ));
         } catch (Exception $exception) {
@@ -42,17 +44,21 @@ class BackendController extends Controller {
     /**
      * @Route("api/v1/postMessage/", name="post_message", methods="POST")
      */
-    public function postMessageAction() {
+    public function postMessageAction(Request $request) {
         try {
-            $data = json_decode($this->getRequest()->getContent(), true);
-
+            $em = $this->getDoctrine()->getManager();
+            
             $message = new Message();
-            $message->setMessage($data['message']);
-            $message->setReceiverId($data['receiver_id']);
-            $message->setSenderId($data['sender_id']);
+            $message->setMessage($request->request->get('message'));
+            
+            $receiver = $em->getRepository('AppBundle:User')->findOneById($request->request->get('receiver_id'));
+            $message->setReceiver($receiver);
+
+            $sender = $em->getRepository('AppBundle:User')->findOneById($this->getUser()->getId());
+            $message->setSender($sender);
+
             $message->setSendDate(new \DateTime());
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($message);
 
             $em->flush();
@@ -67,17 +73,17 @@ class BackendController extends Controller {
     }
 
     /**
-     * @Route("api/v1/getUserMessages/{user_id}/{friend_id}", name="get_user_messages", methods="GET")
+     * @Route("api/v1/getUserMessages/{friend_id}", name="get_user_messages", methods="GET")
      */
-    public function getUserMessagesAction($user_id, $friend_id) {
+    public function getUserMessagesAction($friend_id) {
         try {
             $em = $this->getDoctrine()->getManager()->getRepository('AppBundle:Message');
 
-            $user_ids = "$user_id, $friend_id";
+            $user_id = $this->getUser()->getId();
             $query = $em->createQueryBuilder('m')
                     ->where("m.sender IN ($user_id, $friend_id)")
                     ->andWhere("m.receiver IN ($user_id, $friend_id)")
-                    ->orderBy('m.sendDate', 'DESC')
+                    ->orderBy('m.sendDate', 'ASC')
                     ->getQuery();
 
             $messages = $query->getResult();
@@ -87,7 +93,7 @@ class BackendController extends Controller {
             $serializer = new Serializer($normalizers, $encoders);
             $messagesJson = $serializer->serialize($messages, 'json');
 
-            return new Response($messagesJson, 201, array(
+            return new Response($messagesJson, 200, array(
                 'content-type' => 'application/json'
             ));
         } catch (Exception $exception) {
