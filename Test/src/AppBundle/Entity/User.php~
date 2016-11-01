@@ -2,11 +2,13 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+
 /**
  * User
  */
-class User
-{
+class User implements AdvancedUserInterface, \Serializable {
+
     /**
      * @var string
      */
@@ -15,7 +17,7 @@ class User
     /**
      * @var string
      */
-    private $userName;
+    private $username;
 
     /**
      * @var string
@@ -23,15 +25,9 @@ class User
     private $password;
 
     /**
-     * @var boolean
-     */
-    private $isOnline;
-
-    /**
      * @var integer
      */
     private $id;
-
 
     /**
      * Set email
@@ -40,8 +36,7 @@ class User
      *
      * @return User
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
 
         return $this;
@@ -52,8 +47,7 @@ class User
      *
      * @return string
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -64,8 +58,7 @@ class User
      *
      * @return User
      */
-    public function setUserName($userName)
-    {
+    public function setUsername($userName) {
         $this->userName = $userName;
 
         return $this;
@@ -76,8 +69,7 @@ class User
      *
      * @return string
      */
-    public function getUserName()
-    {
+    public function getUsername() {
         return $this->userName;
     }
 
@@ -88,8 +80,7 @@ class User
      *
      * @return User
      */
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password = $password;
 
         return $this;
@@ -100,33 +91,8 @@ class User
      *
      * @return string
      */
-    public function getPassword()
-    {
+    public function getPassword() {
         return $this->password;
-    }
-
-    /**
-     * Set isOnline
-     *
-     * @param boolean $isOnline
-     *
-     * @return User
-     */
-    public function setIsOnline($isOnline)
-    {
-        $this->isOnline = $isOnline;
-
-        return $this;
-    }
-
-    /**
-     * Get isOnline
-     *
-     * @return boolean
-     */
-    public function getIsOnline()
-    {
-        return $this->isOnline;
     }
 
     /**
@@ -134,9 +100,127 @@ class User
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
-}
 
+
+    /**
+     * @var boolean
+     */
+    private $isActive = '1';
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return User
+     */
+    public function setIsActive($isActive) {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive() {
+        return $this->isActive;
+    }
+
+    public function getSalt() {
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
+        return null;
+    }
+
+    public function getRoles() {
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials() {
+        
+    }
+
+    public function isAccountNonExpired() {
+        return true;
+    }
+
+    public function isAccountNonLocked() {
+        return true;
+    }
+
+    public function isCredentialsNonExpired() {
+        return true;
+    }
+
+    public function isEnabled() {
+        return $this->isActive;
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize() {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->isActive
+                // see section on salt below
+                // $this->salt,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized) {
+        list (
+                $this->id,
+                $this->username,
+                $this->password,
+                $this->isActive
+                // see section on salt below
+                // $this->salt
+                ) = unserialize($serialized);
+    }
+
+    /**
+     * @var \DateTime
+     */
+    private $lastActivityAt;
+
+    /**
+     * Set lastActivityAt
+     *
+     * @param \DateTime $lastActivityAt
+     *
+     * @return User
+     */
+    public function setLastActivityAt($lastActivityAt) {
+        $this->lastActivityAt = $lastActivityAt;
+
+        return $this;
+    }
+
+    /**
+     * Get lastActivityAt
+     *
+     * @return \DateTime
+     */
+    public function getLastActivityAt() {
+        return $this->lastActivityAt;
+    }
+
+    /**
+     * @return Bool Whether the user is active or not
+     */
+    public function isActiveNow() {
+        // Delay during wich the user will be considered as still active
+        $delay = new \DateTime('2 minutes ago');
+
+        return ( $this->getLastActivityAt() > $delay );
+    }
+
+}

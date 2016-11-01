@@ -24,6 +24,6 @@
         <option name="default">1</option>
       </options>
     </field>
-    <field name="isOnline" type="boolean" column="is_online" nullable="false"/>
+    <field name="lastActivityAt" type="datetime" column="last_activity_at" nullable="false"/>
   </entity>
 </doctrine-mapping>

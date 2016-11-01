@@ -139,4 +139,3 @@ class Message
         return $this->receiver;
     }
 }
-

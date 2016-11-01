@@ -3,11 +3,28 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+        {% stylesheets
+            'AppBundle/Resources/public/bootstrap/css/bootstrap.css'
+            'AppBundle/Resources/public/css/*.css'
+            filter='?yui_css'
+            output="css/combined.css"
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body>
+{% block body %}{% endblock %}
+{% javascripts
+            'AppBundle/Resources/public/js/jquery-1.7.2.min.js'
+            'AppBundle/Resources/public/js/*.js'
+            'AppBundle/Resources/public/bootstrap/js/bootstrap.js'
+            filter='?yui_js'
+            output="js/combined.js"
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% block javascripts %}{% endblock %}
+</body>
 </html>
