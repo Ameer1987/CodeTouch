@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use AppBundle\Entity\Message;
 use AppBundle\Form\MessageType;
+use Symfony\Component\Filesystem\Filesystem;
 
 class BackendController extends Controller {
 
@@ -63,6 +64,12 @@ class BackendController extends Controller {
 
             $em->flush();
 
+            // This part is for notifications
+            if (!file_exists('/tmp/random/dir/' . $request->request->get('receiver_id') . '_' . $this->getUser()->getId())) {
+                $fs = new Filesystem();
+                $fs->mkdir('/tmp/random/dir/' . $request->request->get('receiver_id') . '_' . $this->getUser()->getId());
+            }
+
             return new Response('sent', 201);
         } catch (Exception $exception) {
 
@@ -94,6 +101,30 @@ class BackendController extends Controller {
             return new Response($messagesJson, 200, array(
                 'content-type' => 'application/json'
             ));
+        } catch (Exception $exception) {
+
+            throw new Exception('Error occured');
+        }
+    }
+
+    /**
+     * @Route("api/v1/checkNotifications/{friend_id}", name="check_notifications", methods="GET")
+     */
+    public function checkNotificationsAction($friend_id) {
+        try {
+            if ($friend_id !== -1) {
+                if (file_exists('/tmp/random/dir/' . $this->getUser()->getId() . '_' . $friend_id)) {
+                    $fs = new Filesystem();
+                    $fs->remove('/tmp/random/dir/' . $this->getUser()->getId() . '_' . $friend_id);
+                }
+            }
+
+            $new_notification = 0;
+            if (glob('/tmp/random/dir/' . $this->getUser()->getId() . '_*')) {
+                $new_notification = 1;
+            }
+
+            return new Response($new_notification, 200);
         } catch (Exception $exception) {
 
             throw new Exception('Error occured');
