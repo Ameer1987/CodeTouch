@@ -47,10 +47,10 @@ class BackendController extends Controller {
     public function postMessageAction(Request $request) {
         try {
             $em = $this->getDoctrine()->getManager();
-            
+
             $message = new Message();
             $message->setMessage($request->request->get('message'));
-            
+
             $receiver = $em->getRepository('AppBundle:User')->findOneById($request->request->get('receiver_id'));
             $message->setReceiver($receiver);
 
@@ -63,9 +63,7 @@ class BackendController extends Controller {
 
             $em->flush();
 
-            return new Response('sent', 201, array(
-                'content-type' => 'application/json'
-            ));
+            return new Response('sent', 201);
         } catch (Exception $exception) {
 
             throw new Exception('Error occured');
