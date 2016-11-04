@@ -43,4 +43,13 @@
     </div>
 {% endblock %}
 
+{% block javascripts %}
+    {% javascripts
+            'AppBundle/Resources/public/js/chatting.js'
+            filter='?yui_js'
+            output="js/combined.js"
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 
