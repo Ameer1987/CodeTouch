@@ -2,24 +2,32 @@
 
 {% block body %}
 
-    <div class="span2">&nbsp;</div>
-    <div class="span8" style="margin-top: 3%;">
+    <div class="row-fluid">
+        <div class="span2">&nbsp;</div>
+        <div class="span8" style="margin-top: 3%;">
 
-        {% if error %}
-            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+            {% if error %}
+                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-        <form action="{{ path('login') }}" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" />
+            <form action="{{ path('login') }}" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" />
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="_password" />
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="_password" />
 
-            <button type="submit">login</button>
-        </form>
+                <button type="submit">login</button>
+            </form>
+        </div>
+        <div class="span2">&nbsp;</div>
     </div>
-    <div class="span2">&nbsp;</div>
+    <div class="row-fluid">
+        <div class="span2">&nbsp;</div>
+        <div class="span10">
+            <a href="{{ path('user_new') }}">Create new user</a>
+        </div>
+    </div>
 {% endblock %}
 
 
