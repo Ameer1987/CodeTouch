@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="span2">&nbsp;</div>
+    <div class="span8" style="margin-top: 3%;">
+        <h1>User creation</h1>
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" value="Create" />
+        {{ form_end(form) }}
+    </div>
+    <div class="span2">&nbsp;</div>
+
+{% endblock %}
