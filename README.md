@@ -10,10 +10,11 @@ Steps to test the project:
 3- Open terminal and browse to the project folder "Test".
 
 4- Run the following commands 
+
     -> curl http://getcomposer.org/installer | php
 
     -> ./composer.phar install --prefer-dist
-    (at the end of this step you will need only to specify the db name, user and pass)
+    (at the end of this step you will need only to specify the database name, user and pass)
 
     -> bin/console server:run
 
