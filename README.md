@@ -9,7 +9,7 @@ Steps to test the project:
 
 3- Open terminal and browse to the project folder "Test".
 
-4- Run the following commands 
+4- Run the following commands: 
 
     -> curl http://getcomposer.org/installer | php
 
